@@ -1,0 +1,46 @@
+loop:
+
+  client.publish("Pumphouse/Sensor/OHT_Float",(digitalRead(OHT_Float) == HIGH ) ? "ON" : "OFF");
+  client.publish("Pumphouse/Sensor/UGT_Float",(digitalRead(UGT_Float) == HIGH ) ? "ON" : "OFF");
+   
+  int Push_Button_State = digitalRead(Push_Button);  
+  
+  if((millis() - lastPress) > debounceTime)   
+  {
+    lastPress=millis();
+    if(Push_Button_State == LOW){
+      Push_Button_State = !Push_Button_State;
+      client.publish("Pumphouse/Switch/Pump_State",Push_Button_State == HIGH ? "ON":"OFF");
+    }
+  }
+
+  pinMode(OHT_Float, INPUT);
+  pinMode(UGT_Float, INPUT);
+  pinMode(Push_Button,INPUT_PULLUP);
+  pinMode(SSR,OUTPUT);
+
+Callback:
+
+  String message = "";
+  for (int i = 0; i < length; i++) {
+    message += (char)payload[i];
+  }
+  if(message == "ON"){
+    Serial.println("SSR is Turned ON");
+    digitalWrite(SSR,HIGH);
+  }else{
+    Serial.println("SSR is Turned OFF");
+    digitalWrite(SSR,LOW);
+  }
+
+Declaration:
+unsigned long previousTime=millis();
+long unsigned int lastPress;
+int debounceTime = 20;
+int lastButtonState = 1;
+
+int LED_BUILTIN = 2;
+int OHT_Float = 10;
+int UGT_Float = 11;
+int Push_Button = 14;
+int SSR = 16;
