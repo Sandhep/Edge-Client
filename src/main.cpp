@@ -1,18 +1,20 @@
+// Edge MQTT Client 
+
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 
-const char* ssid = "Sandhep";
-const char* password = "balumahes";
+const char* ssid = "SSID_NAME";
+const char* password = "WIFI_PASSWORD";
 
-const char* mqtt_server = "8e3ddd6ba80a4e3e99739281bebb36d8.s1.eu.hivemq.cloud";
+const char* mqtt_server = "MQTT_CLOUD_BROKER_LINK";
 const int mqtt_port = 8883;  
-const char* mqtt_username = "Sandhep";
-const char* mqtt_password = "Sandhep13";
-const char* clientID="ESP32";
-const char* lwt_topic = "Pumphouse/Status";
-const char* lwt_message = "Offline";
+const char* mqtt_username = "MQTT_USERNAME";
+const char* mqtt_password = "mQTT_PASSWORD";
+const char* clientID="CLIENT_ID";
+const char* lwt_topic = "LWT_TOPIC";
+const char* lwt_message = "LWT_MESSAGE";
 const int qos = 1;
 const bool lwt_retain = true;
 
@@ -100,7 +102,7 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     if (client.connect(clientID,mqtt_username,mqtt_password,lwt_topic,qos,lwt_retain,lwt_message)) {
       Serial.println("connected");
-      client.subscribe("Pumphouse/Switch/Pump_State");
+      client.subscribe("TOPIC/STATUS"); // Example Topic
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -127,8 +129,8 @@ void loop() {
   unsigned long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
-    Serial.print("Pumphouse/Sensor/OHT_Float:");
+    Serial.print("TOPIC/STATUS:");
     Serial.println("ON");
-    client.publish("Pumphouse/Sensor/OHT_Float", "ON",true);
+    client.publish("TOPIC/STATUS", "ON",true); // Example Topic
   }
 }
